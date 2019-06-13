@@ -7,6 +7,7 @@
 >a)	YEARMONTH：销售年月
 
 >b)	STORE_NAME：商店名称
+
 >c)	LOCAL_CHANNEL_TYPE：本地分销渠道名称
 
 >d)	LOCAL_STORE_TYPE：商店类型
@@ -43,7 +44,8 @@
 
 ## **实现**
 **1. 根据“川渝地区零售商销售数据”中的loc字段，判断所属地区（市、县）**
-''' python
+
+``` python
     # python 数据库连接操作
     db = pymysql.connect("localhost","raychard","lcwoaili","engipracdb" )    # 打开数据库连接
     cursor = db.cursor()                    # 使用 cursor() 方法创建一个游标对象 cursor
@@ -135,6 +137,6 @@
         tl.add(itemMap, itemTime)
 
     return tl
-'''
+```
 
 
