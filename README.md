@@ -43,7 +43,7 @@
 >目标4）	不同地区（市、县）每月销售总量最高的商品品牌(brand)，可视化方式：地图+柱状图+时间轴；
 
 ## **实现**
-**1. 根据“川渝地区零售商销售数据”中的loc字段，判断所属地区（市、县）**
+# 1. 根据“川渝地区零售商销售数据”中的loc字段，判断所属地区（市、县） #
 
 ``` python
     # python 数据库连接操作
@@ -79,7 +79,13 @@
     db.commit()         # 提交到数据库执行
     print("提交成功")
     db.close()                              # 关闭数据库连接
-    
+     
+```
+### 1.1注意事项： ###
+> 注意错误回滚以及设置合适的批量提交数量即可
+
+#  2、不同地区（市、县）每月的购买力活跃程度，可视化方式：地图+时间轴（可拖动时间轴） #
+``` python
     # 数据处理重点代码
     for municipal in allCountys:
         tmpdict = {}
@@ -138,5 +144,80 @@
 
     return tl
 ```
+### 2.1 注意事项：因为PyEcharts官方数据并未有精确到 county 级别的经纬度信息、所以需要先从数据库读入并导入。再者就是 PyEcharts 没有提供组合地域组合的功能、所以这里需要修改本地 Pyecharts 的地理数据库，才能正常显示 ###
 
+## 2.2 成果：##
+### 2.县级尺度
+![τ=1](https://github.com/GiganticRay/reimagined-dollop/blob/master/ShearImg/%E5%AE%9E%E9%AA%8C%E4%BA%8C-%E6%AF%8F%E6%9C%88%E7%9A%84%E8%B4%AD%E4%B9%B0%E5%8A%9B%E6%B4%BB%E8%B7%83%E7%A8%8B%E5%BA%A6-%E5%8E%BF.png "实验二-每月的购买力活跃程度-县.png")
+### 2.市级尺度
+![τ=1](https://github.com/GiganticRay/reimagined-dollop/blob/master/ShearImg/%E5%AE%9E%E9%AA%8C%E4%BA%8C-%E6%AF%8F%E6%9C%88%E7%9A%84%E8%B4%AD%E4%B9%B0%E5%8A%9B%E6%B4%BB%E8%B7%83%E7%A8%8B%E5%BA%A6-%E5%B8%82.png "实验二-每月的购买力活跃程度-市.png")
+
+# 4）不同地区（市、县）每月销售总量最高的商品品牌(brand)，可视化方式：地图+柱状图+时间轴； #
+## 关键代码 ###
+``` python
+def timeline_map() -> Timeline:
+    allMaps = []
+
+    # 共有 12 个地图
+    for (months, index) in zip(yearMonth, range(0, 11)):
+        map = (
+            Geo()
+            .add_schema(maptype="四川+重庆")
+            .add_coordinate_json(
+                json_file='./myjson.json'
+            )   
+            .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+            .set_global_opts(
+                title_opts=opts.TitleOpts(title="实验四-每月的销售最高Brand-county"),
+                # list 转 int, 获取 max range, min default 0
+                visualmap_opts=opts.VisualMapOpts(
+                    max_= max([int(x) for x in list(np.array(rowData)[:,index+1])]),
+                    is_piecewise=True,
+                    pieces = [
+                        {"min": 500},
+                        {"min": 400, "max": 500},
+                        {"min": 300, "max": 400},
+                        {"min": 200, "max": 300},
+                        {"min": 150, "max": 200},
+                        {"min": 100, "max": 150},
+                        {"min": 50, "max": 100},
+                        {"min": 0, "max": 50}
+                    ]
+                ),
+            )
+        )
+        # 通过地点 name 与 该点的数值 添加地理点
+        # 这里通过循环遍历、因为他这个我真的没办法添加品牌。。。，这里用 series_name 来存放 brand
+        for z in zip(list(np.array(rowData)[:,0]), list(np.array(rowData)[:,index+1]), list(np.array(rowBrand)[:,index+1])):
+            map.add(
+                series_name = z[2],
+                data_pair = [list(z[0:2])],
+                type_=ChartType.EFFECT_SCATTER,
+                large_threshold = 2000,
+                label_opts = opts.LabelOpts(formatter = utils.JsCode("""
+                function (params) {
+                    return params.seriesName
+                }
+                """)
+                )
+            )
+        allMaps.append(map)
+    # 将allMaps 与时间轴绑定
+    tl = (
+        Timeline()
+    )
+    for (itemTime, itemMap) in zip(yearMonth, allMaps):
+        tl.add(itemMap, itemTime)
+
+    return tl
+
+```
+## 注意事项 ###
+> 即如何通过自定义 formatter 将商品标签添加上去
+
+## 成果 ##
+### 4.县级尺度
+![τ=1](https://github.com/GiganticRay/reimagined-dollop/blob/master/ShearImg/%E5%AE%9E%E9%AA%8C%E5%9B%9B-%E6%AF%8F%E6%9C%88%E7%9A%84%E9%94%80%E5%94%AE%E6%9C%80%E9%AB%98Brand-county.png "实验四-每月的销售最高Brand-county.png")
+### 4.市级尺度
+![τ=1](https://github.com/GiganticRay/reimagined-dollop/blob/master/ShearImg/%E5%AE%9E%E9%AA%8C%E5%9B%9B-%E6%AF%8F%E6%9C%88%E7%9A%84%E9%94%80%E5%94%AE%E6%9C%80%E9%AB%98Brand-city.png "实验四-每月的销售最高Brand-city.png")
 
