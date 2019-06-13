@@ -146,14 +146,14 @@
 ```
 ### 2.1 注意事项：因为PyEcharts官方数据并未有精确到 county 级别的经纬度信息、所以需要先从数据库读入并导入。再者就是 PyEcharts 没有提供组合地域组合的功能、所以这里需要修改本地 Pyecharts 的地理数据库，才能正常显示 ###
 
-## 2.2 成果：##
+## 2.2 成果： ##
 ### 2.县级尺度
 ![τ=1](https://github.com/GiganticRay/reimagined-dollop/blob/master/ShearImg/%E5%AE%9E%E9%AA%8C%E4%BA%8C-%E6%AF%8F%E6%9C%88%E7%9A%84%E8%B4%AD%E4%B9%B0%E5%8A%9B%E6%B4%BB%E8%B7%83%E7%A8%8B%E5%BA%A6-%E5%8E%BF.png "实验二-每月的购买力活跃程度-县.png")
 ### 2.市级尺度
 ![τ=1](https://github.com/GiganticRay/reimagined-dollop/blob/master/ShearImg/%E5%AE%9E%E9%AA%8C%E4%BA%8C-%E6%AF%8F%E6%9C%88%E7%9A%84%E8%B4%AD%E4%B9%B0%E5%8A%9B%E6%B4%BB%E8%B7%83%E7%A8%8B%E5%BA%A6-%E5%B8%82.png "实验二-每月的购买力活跃程度-市.png")
 
 # 4）不同地区（市、县）每月销售总量最高的商品品牌(brand)，可视化方式：地图+柱状图+时间轴； #
-## 关键代码 ###
+## 关键代码 ##
 ``` python
 def timeline_map() -> Timeline:
     allMaps = []
