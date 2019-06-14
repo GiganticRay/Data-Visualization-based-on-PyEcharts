@@ -221,3 +221,68 @@ def timeline_map() -> Timeline:
 ### 4.市级尺度
 ![τ=1](https://github.com/GiganticRay/reimagined-dollop/blob/master/ShearImg/%E5%AE%9E%E9%AA%8C%E5%9B%9B-%E6%AF%8F%E6%9C%88%E7%9A%84%E9%94%80%E5%94%AE%E6%9C%80%E9%AB%98Brand-city.png "实验四-每月的销售最高Brand-city.png")
 
+
+# 5）不同类型(category)的商品在哪个月达到销售高峰，可视化方式：柱状图/折线图； #
+## 关键代码 ##
+``` java
+	public BrokenLine selectSY7() {
+		SaleExample example = new SaleExample();
+		List<Sale> sales =  saleMapper.selectSY7(example);
+		List<String> dates = new ArrayList<>();
+		BrokenLine line = new BrokenLine();
+		List<JsonData> jsdt = new ArrayList<>();
+
+		Map<String,List<Integer>> map = new HashMap<>();
+		for(Sale s : sales) {
+			if(dates.contains(s.getYearmonth())) {
+			}else
+			{
+				dates.add(s.getYearmonth());
+			}
+			
+			if(map.containsKey(s.getCategoryName())) {
+				List<Integer> list = map.get(s.getCategoryName());
+				list.add(s.getId());
+				map.put(s.getCategoryName(), list);
+			}else {
+				List<Integer> list = new ArrayList<>();
+				list.add(s.getId());
+				map.put(s.getCategoryName(), list);			
+			}
+		}
+		int i = 0;
+		String[] xcontent=new String[12];
+		for(String date : dates) {
+			xcontent[i] = date;
+			i++;
+		}
+		for(String cat : map.keySet()) {
+			JsonData jd = new JsonData();
+			jd.setName(cat);
+			Integer[] datas = new Integer[12];
+			int j = 0;
+			for(Integer value : map.get(cat)) {
+				datas[j] = value;
+				j++;
+			}
+			jd.setData(datas);
+			jsdt.add(jd);
+		}		
+		
+		
+		line.setxContent(xcontent);
+		line.setDatas(jsdt);
+		//String jsonOutput = JSON.toJSONString();
+		return line;
+	}
+
+```
+## 注意事项 ###
+> 即如何将得到的数据转化前端echarts需要的数据形式，以及动态生成的数据。
+
+## 成果 ##
+### 4.柱状图
+![τ=1](https://github.com/GiganticRay/Data-Visualization-based-on-PyEcharts/blob/master/ShearImg/%E5%AE%9E%E9%AA%8C%E4%B8%83-%E6%9F%B1%E7%8A%B6%E5%9B%BE.png)
+### 4.折线图
+![τ=1](https://github.com/GiganticRay/Data-Visualization-based-on-PyEcharts/blob/master/ShearImg/%E5%AE%9E%E9%AA%8C%E4%B8%83-%E6%8A%98%E7%BA%BF%E5%9B%BE.png)
+
