@@ -281,8 +281,8 @@ def timeline_map() -> Timeline:
 > 即如何将得到的数据转化前端echarts需要的数据形式，以及动态生成的数据。
 
 ## 成果 ##
-### 4.柱状图
+### 5.柱状图
 ![τ=1](https://github.com/GiganticRay/Data-Visualization-based-on-PyEcharts/blob/master/ShearImg/%E5%AE%9E%E9%AA%8C%E4%B8%83-%E6%9F%B1%E7%8A%B6%E5%9B%BE.png)
-### 4.折线图
+### 5.折线图
 ![τ=1](https://github.com/GiganticRay/Data-Visualization-based-on-PyEcharts/blob/master/ShearImg/%E5%AE%9E%E9%AA%8C%E4%B8%83-%E6%8A%98%E7%BA%BF%E5%9B%BE.png)
 
