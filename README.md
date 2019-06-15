@@ -145,6 +145,18 @@
     return tl
 ```
 ### 2.1 注意事项：因为PyEcharts官方数据并未有精确到 county 级别的经纬度信息、所以需要先从数据库读入并导入。再者就是 PyEcharts 没有提供组合地域组合的功能、所以这里需要修改本地 Pyecharts 的地理数据库，才能正常显示 ###
+> 还有就是因为数值分配不均的问题，所以要自适应颜色域，关键代码如下
+``` python
+	# 计算得出当前颜色域的范围, 根据个数平均分成组。
+	sliptNum = int(len(list(np.array(rowData)[:,index+1])) / 10)
+	splitBoundaryIndex = [i for i in range(0, len(list(np.array(rowData)[:,index+1])), sliptNum)]
+	splitBoundaryIndex.append(len(list(np.array(rowData)[:,index+1])) - 1) # 以防万一，将最后一个也加进去。
+
+	tmpSort = [int(i) for i in list(np.array(rowData)[:,index+1])]
+	tmpSort.sort()
+	splitBoundary = [tmpSort[i] for i in splitBoundaryIndex] # ex: [1, 4, 9, 16, 33, 54, 125, 201, 317, 538, 2663]
+```
+
 
 ## 2.2 成果： ##
 ### 2.县级尺度
