@@ -97,7 +97,7 @@ def timeline_map() -> Timeline:
     # 共有 12 个地图
     for (months, index) in zip(yearMonth, range(0, 12)):
 
-        # 计算得出当前颜色域的范围, 根据个数平均分成10个组。
+        # 计算得出当前颜色域的范围, 根据个数平均分成组。
         sliptNum = int(len(list(np.array(rowData)[:,index+1])) / 10)
         splitBoundaryIndex = [i for i in range(0, len(list(np.array(rowData)[:,index+1])), sliptNum)]
         splitBoundaryIndex.append(len(list(np.array(rowData)[:,index+1])) - 1)   # 以防万一，将最后一个也加进去。
