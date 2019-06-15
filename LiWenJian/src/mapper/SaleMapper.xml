@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.cuit.gcsj.mapper.SaleMapper" >
+  <resultMap id="BaseResultMap" type="edu.cuit.gcsj.po.Sale" >
+    <result column="yearmonth" property="yearmonth" jdbcType="CHAR" />
+    <result column="hub_type" property="hubType" jdbcType="CHAR" />
+    <result column="store_seq" property="storeSeq" jdbcType="VARCHAR" />
+    <result column="local_channel_type" property="localChannelType" jdbcType="VARCHAR" />
+    <result column="local_store_type" property="localStoreType" jdbcType="VARCHAR" />
+    <result column="golden_store_flag" property="goldenStoreFlag" jdbcType="CHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="town" property="town" jdbcType="VARCHAR" />
+    <result column="city_level" property="cityLevel" jdbcType="CHAR" />
+    <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+    <result column="product_chinese_name" property="productChineseName" jdbcType="VARCHAR" />
+    <result column="category_name" property="categoryName" jdbcType="VARCHAR" />
+    <result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+    <result column="tier_name" property="tierName" jdbcType="VARCHAR" />
+    <result column="variant_name" property="variantName" jdbcType="VARCHAR" />
+    <result column="loc" property="loc" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectSY7" resultMap="BaseResultMap" parameterType="edu.cuit.gcsj.po.SaleExample" >
+
+     	 SELECT  yearmonth,category_name,count(*) as id  FROM `sale` GROUP BY yearmonth,category_name ORDER BY yearmonth
+
+  </select>
+   <select id="selectCategoryName" resultMap="BaseResultMap" parameterType="edu.cuit.gcsj.po.SaleExample" >
+
+     	  SELECT  category_name,count(category_name) as catnum FROM `sale` GROUP BY category_name
+
+  </select>
+     <select id="selectBrandName" resultMap="BaseResultMap" parameterType="edu.cuit.gcsj.po.SaleExample" >
+
+     	 SELECT brand_name,count(brand_name) as brandnum FROM `sale` GROUP BY brand_name
+
+  </select>
+  
+     <select id="selectProductChineseName" resultMap="BaseResultMap" parameterType="edu.cuit.gcsj.po.SaleExample" >
+
+     	  SELECT product_chinese_name,count(product_chinese_name) as chinesenum FROM `sale` GROUP BY product_chinese_name
+
+  </select>
+</mapper>

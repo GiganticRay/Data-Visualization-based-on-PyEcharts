@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<!-- 
+		由于在spring中进行mapper扫描，这里就不需要配置mapper了
+	 -->
+	 
+	 <!-- 这里只配置别名 -->
+	 <typeAliases>
+	 <!-- 扫描po包  别名为类名 -->
+	 	<package name="edu.cuit.gcsj.po"/>
+	 </typeAliases>
+</configuration>
