@@ -26,6 +26,7 @@
         myChart.showLoading();
         // 指定图表的配置项和数据
         var option = {
+        		backgroundColor:'#ffffff',
         		title: {
         	        text: ''
         	    },
@@ -67,7 +68,7 @@
                         type:'line',  
                         itemStyle: {normal: {areaStyle: {type: 'line'}}},  
                                 label: {normal: {position: 'top'}},  
-                                markLine: {data: [{type: 'average', name: '总值'}]},  
+                                markLine: {data: [{type: 'max', name: '最大值值'}]},  
                                 data:[]  
                     }  
                 };// series中的每一项为一个item,所有的属性均可以在此处定义  

@@ -108,7 +108,7 @@ var labelOption = {
 };
 
 option = {
-    color: ['#003366', '#006699', '#4cabce', '#e5323e','#0a66d9','#00e69d','#0ffaa9','#0c619a','#8c6a9a'],
+    color: ['#000000', '#FFFF00', '#4cabce', '#e5323e','#0a66d9','#8B4513','#0ffaa9','#FFA500','#8c6a9a','#FFC0CB'],
     tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -158,7 +158,7 @@ jQuery.ajax({
                 type:'bar',  
                 itemStyle: {normal: {areaStyle: {type: 'bar'}}},  
                         label: {normal: {position: 'top'}},  
-                        markLine: {data: [{type: 'average', name: '总值'}]},  
+                        markLine: {data: [{type: 'max', name: '最大值'}]},  
                         data:[]  
             }  
         };// series中的每一项为一个item,所有的属性均可以在此处定义  
