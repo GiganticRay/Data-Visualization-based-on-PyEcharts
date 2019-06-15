@@ -96,6 +96,22 @@ def timeline_map() -> Timeline:
 
     # 共有 12 个地图
     for (months, index) in zip(yearMonth, range(0, 12)):
+
+        # 计算得出当前颜色域的范围, 根据个数平均分成10个组。
+        sliptNum = int(len(list(np.array(rowData)[:,index+1])) / 10)
+        splitBoundaryIndex = [i for i in range(0, len(list(np.array(rowData)[:,index+1])), sliptNum)]
+        splitBoundaryIndex.append(len(list(np.array(rowData)[:,index+1])) - 1)   # 以防万一，将最后一个也加进去。
+        tmpSort = [int(i) for i in list(np.array(rowData)[:,index+1])]
+        tmpSort.sort()
+        splitBoundary = [tmpSort[i] for i in splitBoundaryIndex]                 # ex: [1, 4, 9, 16, 33, 54, 125, 201, 317, 538, 2663]
+        # 转化为 json
+        jsonSplitBoundary = '['
+        for i in range(len(splitBoundary) - 1):
+            jsonSplitBoundary += "{\"min\": " + str(splitBoundary[i]) + ", \"max\": " + str(splitBoundary[i+1]) + "},"
+        jsonSplitBoundary +='$]'
+        jsonSplitBoundary = jsonSplitBoundary.replace(",$", "")
+        jsonSplitBoundary = json.loads(jsonSplitBoundary)
+
         map = (
             Geo()
             .add_schema(maptype="四川+重庆")
@@ -109,16 +125,7 @@ def timeline_map() -> Timeline:
                 visualmap_opts=opts.VisualMapOpts(
                         max_= max([int(x) for x in list(np.array(rowData)[:,index+1])]),
                         is_piecewise=True,
-                        pieces = [
-                            {"min": 2000},
-                            {"min": 1500, "max": 2000},
-                            {"min": 1100, "max": 1500},
-                            {"min": 700, "max": 1100},
-                            {"min": 400, "max": 700},
-                            {"min": 200, "max": 400},
-                            {"min": 100, "max": 200},
-                            {"min": 0, "max": 100}
-                        ]
+                        pieces = jsonSplitBoundary
                     ),
 
             )
@@ -140,7 +147,10 @@ def timeline_map() -> Timeline:
         allMaps.append(map)
     # 将allMaps 与时间轴绑定
     tl = (
-        Timeline()
+        Timeline().add_schema(
+            play_interval = 2000,
+            is_auto_play = True
+        )
     )
     for (itemTime, itemMap) in zip(yearMonth, allMaps):
         tl.add(itemMap, itemTime)
@@ -150,10 +160,13 @@ def timeline_map() -> Timeline:
 # make 时间轴Bar
 def timeline_bar() -> Timeline:
     allBars = []
-    # 共有 12 个地图
+    # 共有 12 个Bar
     for (months, index) in zip(yearMonth, range(0, 11)):
+        
         bar = Bar()
-
+        bar.set_global_opts(
+                title_opts=opts.TitleOpts("实验二-每月的购买力活跃程度")
+            )
         bar.add_xaxis(['municipal'])    
         for z in zip(list(np.array(rowData)[:,0]), list(np.array(rowData)[:,index+1]), list(np.array(rowBrand)[:,index+1])):
             bar.add_yaxis(series_name = z[0] + z[2], yaxis_data = [z[1]]).set_global_opts(
@@ -167,7 +180,10 @@ def timeline_bar() -> Timeline:
 
     # 将allBars 与时间轴绑定
     tl = (
-        Timeline()
+        Timeline().add_schema(
+            play_interval = 2000,
+            is_auto_play = True
+        )
     )
     # bug：为什么后面的 bar 的x轴坐标会覆盖掉前面的bar呢
     for (itemTime, itemBar) in zip(yearMonth, allBars):

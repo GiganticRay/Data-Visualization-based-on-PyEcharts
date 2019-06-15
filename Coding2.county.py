@@ -9,6 +9,8 @@ from pyecharts.globals import ChartType, SymbolType
 
 import numpy as np
 
+from example.commons import Faker
+
 global yearMonth  #在使用前初次声明
 yearMonth = []
 global countyLonLat # 每个county及其平均经纬度
@@ -125,6 +127,22 @@ def timeline_map() -> Timeline:
 
     # 共有 12 个地图
     for (months, index) in zip(yearMonth, range(0, 11)):
+
+        # 计算得出当前颜色域的范围, 根据个数平均分成10个组。
+        sliptNum = int(len(list(np.array(rowData)[:,index+1])) / 10)
+        splitBoundaryIndex = [i for i in range(0, len(list(np.array(rowData)[:,index+1])), sliptNum)]
+        splitBoundaryIndex.append(len(list(np.array(rowData)[:,index+1])) - 1)   # 以防万一，将最后一个也加进去。
+        tmpSort = [int(i) for i in list(np.array(rowData)[:,index+1])]
+        tmpSort.sort()
+        splitBoundary = [tmpSort[i] for i in splitBoundaryIndex]                 # ex: [1, 4, 9, 16, 33, 54, 125, 201, 317, 538, 2663]
+        # 转化为 json
+        jsonSplitBoundary = '['
+        for i in range(len(splitBoundary) - 1):
+            jsonSplitBoundary += "{\"min\": " + str(splitBoundary[i]) + ", \"max\": " + str(splitBoundary[i+1]) + "},"
+        jsonSplitBoundary +='$]'
+        jsonSplitBoundary = jsonSplitBoundary.replace(",$", "")
+        jsonSplitBoundary = json.loads(jsonSplitBoundary)
+
         map = (
             Geo()
             .add_schema(maptype="四川+重庆")
@@ -134,7 +152,11 @@ def timeline_map() -> Timeline:
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
             .set_global_opts(
                 title_opts=opts.TitleOpts(title="实验二-每月的购买力活跃程度-县"),
-                visualmap_opts=opts.VisualMapOpts(max_= max([int(x) for x in list(np.array(rowData)[:,index+1])]), is_piecewise=True),
+                visualmap_opts=opts.VisualMapOpts(
+                    max_= max([int(x) for x in list(np.array(rowData)[:,index+1])]), 
+                    is_piecewise=True,
+                    pieces = jsonSplitBoundary
+                ),
             )
         )
         # 通过地点 name 与 该点的数值 添加地理点
@@ -148,7 +170,10 @@ def timeline_map() -> Timeline:
         allMaps.append(map)
     # 将allMaps 与时间轴绑定
     tl = (
-        Timeline()
+        Timeline().add_schema(
+            play_interval = 2000,
+            is_auto_play = True
+        )
     )
     for (itemTime, itemMap) in zip(yearMonth, allMaps):
         tl.add(itemMap, itemTime)
@@ -158,22 +183,28 @@ def timeline_map() -> Timeline:
 # make 时间轴Bar
 def timeline_bar() -> Timeline:
     allBars = []
-    # 共有 12 个地图
+    # 共有 12 个
     for (months, index) in zip(yearMonth, range(0, 11)):
         bar = (
             Bar()
             .add_xaxis(list(np.array(rowData)[:,0]))
             .add_yaxis("活跃度", list(np.array(rowData)[:,index+1]))
-            .set_global_opts(title_opts=opts.TitleOpts("实验二-每月的购买力活跃程度-县"), )
+            .set_global_opts(
+                title_opts = opts.TitleOpts("实验二-每月的购买力活跃程度-县"),
+                datazoom_opts = [opts.DataZoomOpts(), opts.DataZoomOpts(type_="inside")]
+            )
         )
         allBars.append(bar)
     
     # 将allBars 与时间轴绑定
     tl = (
-        Timeline()
+        Timeline().add_schema(
+            play_interval = 2000,
+            is_auto_play = True
+        )
     )
     for (itemTime, itemBar) in zip(yearMonth, allBars):
-        tl.add(itemBar, itemTime)
+        tl.add(itemBar, itemTime) 
     return tl
 
 # 将 图画对象绘制出 html
@@ -194,7 +225,7 @@ if __name__ == "__main__":
     # OperCharts()
     # res = testHttp()
     # OperData()
-    
+
     OrignData()
     DrawIng()
 
