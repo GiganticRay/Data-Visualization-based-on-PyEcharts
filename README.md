@@ -222,7 +222,7 @@ def timeline_map() -> Timeline:
 ![τ=1](https://github.com/GiganticRay/reimagined-dollop/blob/master/ShearImg/%E5%AE%9E%E9%AA%8C%E5%9B%9B-%E6%AF%8F%E6%9C%88%E7%9A%84%E9%94%80%E5%94%AE%E6%9C%80%E9%AB%98Brand-city.png "实验四-每月的销售最高Brand-city.png")
 
 
-# 5）不同类型(category)的商品在哪个月达到销售高峰，可视化方式：柱状图/折线图； #
+# 7）不同类型(category)的商品在哪个月达到销售高峰，可视化方式：柱状图/折线图； #
 ## 关键代码 ##
 ``` java
 	public BrokenLine selectSY7() {
@@ -281,8 +281,8 @@ def timeline_map() -> Timeline:
 > 即如何将得到的数据转化前端echarts需要的数据形式，以及动态生成的数据。
 
 ## 成果 ##
-### 5.柱状图
+### 7.柱状图
 ![τ=1](https://github.com/GiganticRay/Data-Visualization-based-on-PyEcharts/blob/master/ShearImg/%E5%AE%9E%E9%AA%8C%E4%B8%83-%E6%9F%B1%E7%8A%B6%E5%9B%BE.png)
-### 5.折线图
+### 7.折线图
 ![τ=1](https://github.com/GiganticRay/Data-Visualization-based-on-PyEcharts/blob/master/ShearImg/%E5%AE%9E%E9%AA%8C%E4%B8%83-%E6%8A%98%E7%BA%BF%E5%9B%BE.png)
 
