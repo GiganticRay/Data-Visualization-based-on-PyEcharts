@@ -107,42 +107,42 @@
     
     
     def timeline_map() -> Timeline:
-    allMaps = []
+	    allMaps = []
 
-    # 共有 12 个地图
-    for (months, index) in zip(yearMonth, range(0, 11)):
-        # 这里自己添加的四川 + 重庆，
-        # D:\Anaconda3\Lib\site-packages\echarts_china_cities_pypkg\resources\echarts-china-cities-js\sichuan_chongqing.js
-        # D:\Anaconda3\Lib\site-packages\pyecharts\datasets\map_filename.json
-        map = (
-            Geo()
-            .add_schema(maptype="四川+重庆")
-            .add_coordinate_json(               # 读取完之后用 get_coordinate, 这里读入之后，内存中即存放了经纬度与对应名字，所以可以直接用了
-                json_file='./myjson.json'
-            )   
-            .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-            .set_global_opts(
-                title_opts=opts.TitleOpts(title="实验二-每月的购买力活跃程度"),
-                visualmap_opts=opts.VisualMapOpts(max_= max([int(x) for x in list(np.array(rowData)[:,index+1])]), is_piecewise=True),
-            )
-        )
-        # 通过地点 name 与 该点的数值 添加地理点
-        map.add(
-            "购买力",
-            [list(z) for z in zip(list(np.array(rowData)[:,0]), list(np.array(rowData)[:,index+1]))],
-            type_=ChartType.EFFECT_SCATTER,
-            large_threshold=2000,
-            label_opts=""
-        )
-        allMaps.append(map)
-    # 将allMaps 与时间轴绑定
-    tl = (
-        Timeline()
-    )
-    for (itemTime, itemMap) in zip(yearMonth, allMaps):
-        tl.add(itemMap, itemTime)
+	    # 共有 12 个地图
+	    for (months, index) in zip(yearMonth, range(0, 11)):
+		# 这里自己添加的四川 + 重庆，
+		# D:\Anaconda3\Lib\site-packages\echarts_china_cities_pypkg\resources\echarts-china-cities-js\sichuan_chongqing.js
+		# D:\Anaconda3\Lib\site-packages\pyecharts\datasets\map_filename.json
+		map = (
+		    Geo()
+		    .add_schema(maptype="四川+重庆")
+		    .add_coordinate_json(               # 读取完之后用 get_coordinate, 这里读入之后，内存中即存放了经纬度与对应名字，所以可以直接用了
+			json_file='./myjson.json'
+		    )   
+		    .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+		    .set_global_opts(
+			title_opts=opts.TitleOpts(title="实验二-每月的购买力活跃程度"),
+			visualmap_opts=opts.VisualMapOpts(max_= max([int(x) for x in list(np.array(rowData)[:,index+1])]), is_piecewise=True),
+		    )
+		)
+		# 通过地点 name 与 该点的数值 添加地理点
+		map.add(
+		    "购买力",
+		    [list(z) for z in zip(list(np.array(rowData)[:,0]), list(np.array(rowData)[:,index+1]))],
+		    type_=ChartType.EFFECT_SCATTER,
+		    large_threshold=2000,
+		    label_opts=""
+		)
+		allMaps.append(map)
+	    # 将allMaps 与时间轴绑定
+	    tl = (
+		Timeline()
+	    )
+	    for (itemTime, itemMap) in zip(yearMonth, allMaps):
+		tl.add(itemMap, itemTime)
 
-    return tl
+	    return tl
 ```
 ### 2.1 注意事项：因为PyEcharts官方数据并未有精确到 county 级别的经纬度信息、所以需要先从数据库读入并导入。再者就是 PyEcharts 没有提供组合地域组合的功能、所以这里需要修改本地 Pyecharts 的地理数据库，才能正常显示 ###
 > 还有就是因为数值分配不均的问题，所以要自适应颜色域，关键代码如下
